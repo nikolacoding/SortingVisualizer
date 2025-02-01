@@ -5,14 +5,29 @@ import java.awt.event.ActionListener;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MainWindow extends JFrame {
-    public final JButton sortButton = new JButton("Sort");
-    public final JButton setButton = new JButton("Set");
-    public final JButton randomizeButton = new JButton("Randomize");
-    public final JTextField[] numberFields = new JTextField[Constants.NUM_ITEMS];
+    public final DockedPanel topPanel = new DockedPanel();
+    public final DockedPanel bottomPanel = new DockedPanel();
+
+    public static final JButton sortButton = new JButton("Sort");
+    public static final JButton setButton = new JButton("Set");
+    public static final JButton randomizeButton = new JButton("Randomize");
+    public static final JTextField[] numberInputFields = new JTextField[Constants.NUM_ITEMS];
     private final JPanel numbersPanel = new JPanel();
 
+    public static final JLabel speedSliderLabel = new JLabel("Simulation speed");
+    public static final JSlider speedSlider = new JSlider();
+
+    public static void SetControlsLock(boolean state){
+        speedSlider.setEnabled(!state);
+        sortButton.setEnabled(!state);
+        setButton.setEnabled(!state);
+        randomizeButton.setEnabled(!state);
+        for (var field : numberInputFields)
+            field.setEnabled(!state);
+    }
+
     private boolean anyTextFieldIsEmpty(){
-        for (var field : numberFields)
+        for (var field : numberInputFields)
             if (field.getText().isEmpty())
                 return true;
         return false;
@@ -23,7 +38,7 @@ public class MainWindow extends JFrame {
             return;
 
         numbersPanel.removeAll();
-        var newPanel = SortingPanel.generate(numberFields);
+        var newPanel = SortingPanel.generate(numberInputFields);
         numbersPanel.setLayout(newPanel.getLayout());
         numbersPanel.setBackground(newPanel.getBackground());
         for (var component : newPanel.getComponents())
@@ -45,7 +60,7 @@ public class MainWindow extends JFrame {
         for (var component : newPanel.getComponents())
             numbersPanel.add(component);
 
-        for (var field : numberFields)
+        for (var field : numberInputFields)
             field.setText("");
 
         repaint();
@@ -61,26 +76,21 @@ public class MainWindow extends JFrame {
 
         // setting the general layout
         this.setLayout(new BorderLayout());
-
-        var topPanel = new DockedPanel();
-        var bottomPanel = new DockedPanel();
         this.add(topPanel, BorderLayout.NORTH);
         this.add(bottomPanel, BorderLayout.SOUTH);
         this.add(numbersPanel, BorderLayout.CENTER);
 
         // bottom panel management
-        var slider = new JSlider();
-        var sliderLabel = new JLabel("Brzina simulacije");
-        slider.setBackground(Color.lightGray);
-        bottomPanel.add(sliderLabel);
-        bottomPanel.add(slider);
+        speedSlider.setBackground(Color.lightGray);
+        bottomPanel.add(speedSliderLabel);
+        bottomPanel.add(speedSlider);
 
         // top panel management
         topPanel.setPreferredSize(new Dimension(0, 50));
-        for (int i = 0; i < numberFields.length; i++){
+        for (int i = 0; i < numberInputFields.length; i++){
             var newTextField = new JTextField();
             newTextField.setPreferredSize(new Dimension(20, 20));
-            numberFields[i] = newTextField;
+            numberInputFields[i] = newTextField;
             topPanel.add(newTextField);
         }
         topPanel.add(setButton);
@@ -94,6 +104,8 @@ public class MainWindow extends JFrame {
                     setNumbers();
                 else if (e.getSource() == randomizeButton)
                     randomizeNumbers();
+                else if (e.getSource() == sortButton)
+                    SortingManager.BubbleSort(numbersPanel, true, speedSlider.getValue());
             }
         };
 

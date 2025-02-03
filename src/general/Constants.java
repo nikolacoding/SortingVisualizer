@@ -16,4 +16,5 @@ public final class Constants {
 
     // General
     public static final long BASE_SIMULATION_SPEED = 1001;
+    public static final long SPEED_UPDATE_INTERVAL = 50;
 }

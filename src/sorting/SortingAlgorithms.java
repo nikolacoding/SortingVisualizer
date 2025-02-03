@@ -1,6 +1,7 @@
 package sorting;
 
 import display.MainWindow;
+import general.Constants;
 import general.Utility;
 
 import javax.swing.JPanel;
@@ -22,13 +23,14 @@ public class SortingAlgorithms {
             Thread speedThread = new Thread(() -> {
                 while (true) {
                     sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
-                    try { Thread.sleep(50);
-                    } catch (InterruptedException e) { System.out.println("[BubbleSort] Azuriranje brzine prekinuto."); }
+                    Utility.Sleep(Constants.SPEED_UPDATE_INTERVAL);
                 }
             });
             speedThread.start();
 
+            // outer loop, controls the idea of the sorted part of the collection
             for (int i = 0; i < size - 1; i++) {
+                // inner loop, pure comparisons
                 for (int j = 0; j < size - i - 1; j++) {
                     final int j_f = j;
 
@@ -37,16 +39,11 @@ public class SortingAlgorithms {
                     if (compResult) {
                         SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, j_f, j_f + 1, false));
 
-                        try {
-                            Thread.sleep(sleepDuration[0]);
-                        } catch (InterruptedException e) { System.out.println("Interrupted [BubbleSort] - 1"); }
+                        Utility.Sleep(sleepDuration[0]);
 
-                        // Swap the elements
                         SwingUtilities.invokeLater(() -> SortingUtilities.SwapTwo(numbersPanel, j_f, j_f + 1));
 
-                        try {
-                            Thread.sleep(sleepDuration[0]);
-                        } catch (InterruptedException e) { System.out.println("Interrupted [BubbleSort] - 2"); }
+                        Utility.Sleep(sleepDuration[0]);
                     }
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, j_f, j_f + 1, true));
                 }
@@ -67,8 +64,7 @@ public class SortingAlgorithms {
             Thread speedThread = new Thread(() -> {
                 while (true) {
                     sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
-                    try { Thread.sleep(50);
-                    } catch (InterruptedException e) { System.out.println("[SelectionSort] Azuriranje brzine prekinuto."); }
+                    Utility.Sleep(Constants.SPEED_UPDATE_INTERVAL);
                 }
             });
             speedThread.start();
@@ -143,8 +139,7 @@ public class SortingAlgorithms {
             Thread speedThread = new Thread(() -> {
                 while (true) {
                     sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
-                    try { Thread.sleep(50);
-                    } catch (InterruptedException e) { System.out.println("[InsertionSort] Azuriranje brzine prekinuto."); }
+                    Utility.Sleep(Constants.SPEED_UPDATE_INTERVAL);
                 }
             });
             speedThread.start();
@@ -204,8 +199,7 @@ public class SortingAlgorithms {
             Thread speedThread = new Thread(() -> {
                 while (true) {
                     sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
-                    try { Thread.sleep(50);
-                    } catch (InterruptedException e) { System.out.println("[InsertionSort] Azuriranje brzine prekinuto."); }
+                    Utility.Sleep(Constants.SPEED_UPDATE_INTERVAL);
                 }
             });
             speedThread.start();

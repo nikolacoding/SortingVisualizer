@@ -35,6 +35,8 @@ public class MainWindow extends JFrame {
         sortButton.setEnabled(!state);
         setButton.setEnabled(!state);
         randomizeButton.setEnabled(!state);
+        orderButton.setEnabled(!state);
+        algorithmSelector.setEnabled(!state);
         for (var field : numberInputFields)
             field.setEnabled(!state);
     }

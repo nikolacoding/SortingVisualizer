@@ -12,13 +12,24 @@ public class SortingAlgorithms {
     protected static void BubbleSort(JPanel numbersPanel, boolean ascending) {
         int size = numbersPanel.getComponentCount();
         int compareAgainst = ascending ? 1 : -1;
+        long[] sleepDuration = { MainWindow.GetInverseSimulationSpeed() };
 
         new Thread(() -> {
             // locking every control on the main window (buttons, fields and sliders) until the algorithm is done
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+
+            // concurrently updates the speed (lack of sleep) based on the slider position, allowing the user to change the speed mid-execution
+            Thread speedThread = new Thread(() -> {
+                while (true) {
+                    sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
+                    try { Thread.sleep(50);
+                    } catch (InterruptedException e) { System.out.println("[BubbleSort] Azuriranje brzine prekinuto."); }
+                }
+            });
+            speedThread.start();
+
             for (int i = 0; i < size - 1; i++) {
                 for (int j = 0; j < size - i - 1; j++) {
-                    final long sleepDuration = MainWindow.GetInverseSimulationSpeed();
                     final int j_f = j;
 
                     boolean compResult = SortingUtilities.CompareTwo(numbersPanel, j_f, j_f + 1) == compareAgainst;
@@ -27,14 +38,14 @@ public class SortingAlgorithms {
                         SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, j_f, j_f + 1, false));
 
                         try {
-                            Thread.sleep(sleepDuration);
+                            Thread.sleep(sleepDuration[0]);
                         } catch (InterruptedException e) { System.out.println("Interrupted [BubbleSort] - 1"); }
 
                         // Swap the elements
                         SwingUtilities.invokeLater(() -> SortingUtilities.SwapTwo(numbersPanel, j_f, j_f + 1));
 
                         try {
-                            Thread.sleep(sleepDuration);
+                            Thread.sleep(sleepDuration[0]);
                         } catch (InterruptedException e) { System.out.println("Interrupted [BubbleSort] - 2"); }
                     }
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, j_f, j_f + 1, true));
@@ -47,9 +58,20 @@ public class SortingAlgorithms {
     protected static void SelectionSort(JPanel numbersPanel, boolean ascending){
         int size = numbersPanel.getComponentCount();
         int compareAgainst = ascending ? 1 : -1;
+        long[] sleepDuration = { MainWindow.GetInverseSimulationSpeed() };
 
         new Thread(() -> {
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+
+            // concurrently updates the speed (lack of sleep) based on the slider position, allowing the user to change the speed mid-execution
+            Thread speedThread = new Thread(() -> {
+                while (true) {
+                    sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
+                    try { Thread.sleep(50);
+                    } catch (InterruptedException e) { System.out.println("[SelectionSort] Azuriranje brzine prekinuto."); }
+                }
+            });
+            speedThread.start();
 
             // outer loop, makes sure the inner loops runs within correct bounds
             for (int i = 0; i < size - 1; i++){
@@ -62,12 +84,11 @@ public class SortingAlgorithms {
                 // inner loop, searches for the smallest/greatest element on the [i + 1, size - 1] segment
                 for (int j = i + 1; j < size; j++){
                     final int j_f = j;
-                    final long sleepDuration = MainWindow.GetInverseSimulationSpeed();
 
                     // labelling (in yellow) the current element currently being compared with the anchor
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.yellow));
 
-                    Utility.Sleep(sleepDuration);
+                    Utility.Sleep(sleepDuration[0]);
                     final int compResult = SortingUtilities.CompareTwo(numbersPanel, max_i, j_f);
 
                     // if the currently compared element is smaller/greater than the anchor, unlabel the previous smallest/greatest (if it exists)
@@ -113,18 +134,28 @@ public class SortingAlgorithms {
     protected static void InsertionSort(JPanel numbersPanel, boolean ascending) {
         int size = numbersPanel.getComponentCount();
         int compareAgainst = ascending ? -1 : 1;
+        long[] sleepDuration = { MainWindow.GetInverseSimulationSpeed() };
 
         new Thread(() -> {
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
 
+            // concurrently updates the speed (lack of sleep) based on the slider position, allowing the user to change the speed mid-execution
+            Thread speedThread = new Thread(() -> {
+                while (true) {
+                    sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
+                    try { Thread.sleep(50);
+                    } catch (InterruptedException e) { System.out.println("[InsertionSort] Azuriranje brzine prekinuto."); }
+                }
+            });
+            speedThread.start();
+
             // outer loop, makes sure the inner loop, if invoked, runs from i backwards
             for (int i = 1; i < size; i++) {
                 final int i_f = i;
-                final long sleepDuration = MainWindow.GetInverseSimulationSpeed();
                 int j = i;
 
                 SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f, Color.blue));
-                Utility.Sleep(sleepDuration);
+                Utility.Sleep(sleepDuration[0]);
 
                 // inner loop, makes sure to keep swapping elements until the logic of INSERTING the out-of-place i-th element
                 // into its appropriate place in the sorted (left) portion of the collection is correctly simulated
@@ -135,7 +166,7 @@ public class SortingAlgorithms {
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.red));
 
                     // pause
-                    Utility.Sleep(sleepDuration);
+                    Utility.Sleep(sleepDuration[0]);
 
                     // label the element about to be swapped with the critical one
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - 1, Color.blue));
@@ -144,7 +175,7 @@ public class SortingAlgorithms {
                     SortingUtilities.SwapTwo(numbersPanel, j, j - 1);
 
                     // pause
-                    Utility.Sleep(sleepDuration);
+                    Utility.Sleep(sleepDuration[0]);
 
                     // re-label the critical element to signify that it's being checked again
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - 1, Color.blue));
@@ -164,9 +195,20 @@ public class SortingAlgorithms {
     protected static void ShellSort(JPanel numbersPanel, boolean ascending) {
         int size = numbersPanel.getComponentCount();
         int compareAgainst = ascending ? -1 : 1;
+        long[] sleepDuration = { MainWindow.GetInverseSimulationSpeed() };
 
         new Thread(() -> {
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+
+            // concurrently updates the speed (lack of sleep) based on the slider position, allowing the user to change the speed mid-execution
+            Thread speedThread = new Thread(() -> {
+                while (true) {
+                    sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
+                    try { Thread.sleep(50);
+                    } catch (InterruptedException e) { System.out.println("[InsertionSort] Azuriranje brzine prekinuto."); }
+                }
+            });
+            speedThread.start();
 
             // outer outer loop, tracks the increment
             for (int h = size / 2; h > 0; h /= 2) {
@@ -174,13 +216,12 @@ public class SortingAlgorithms {
                 // outer loop, makes sure the inner loop, if invoked, runs from i backwards
                 for (int i = 1; i < size; i++) {
                     final int i_f = i;
-                    final long sleepDuration = MainWindow.GetInverseSimulationSpeed();
                     int j = i;
 
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f, Color.blue));
                     if (i_f - h_f >= 0)
                         SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f - h_f, Color.blue));
-                    Utility.Sleep(sleepDuration);
+                    Utility.Sleep(sleepDuration[0]);
 
                     // inner loop, makes sure to keep swapping elements until the logic of INSERTING the out-of-place i-th element
                     // into its appropriate place in the sorted (left) portion of the collection is correctly simulated
@@ -191,7 +232,7 @@ public class SortingAlgorithms {
                         SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.red));
 
                         // pause
-                        Utility.Sleep(sleepDuration);
+                        Utility.Sleep(sleepDuration[0]);
 
                         // label the element about to be swapped with the critical one
                         SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - h_f, Color.blue));
@@ -200,7 +241,7 @@ public class SortingAlgorithms {
                         SortingUtilities.SwapTwo(numbersPanel, j, j - h);
 
                         // pause
-                        Utility.Sleep(sleepDuration);
+                        Utility.Sleep(sleepDuration[0]);
 
                         // re-label the critical element to signify that it's being checked again
                         SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - h_f, Color.blue));

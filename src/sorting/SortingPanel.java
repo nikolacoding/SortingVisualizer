@@ -1,5 +1,7 @@
 package sorting;
 
+import general.Constants;
+
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -17,7 +19,7 @@ public final class SortingPanel extends JPanel {
         var panel = new SortingPanel(fields.length);
         for (var field : fields){
             var label = new JLabel(field.getText());
-            label.setBackground(Color.red);
+            label.setFont(label.getFont().deriveFont(Constants.COLLECTION_FONT_SIZE));
             panel.add(label);
         }
 
@@ -28,7 +30,7 @@ public final class SortingPanel extends JPanel {
         var panel = new SortingPanel(strings.length);
         for (var s : strings){
             var label = new JLabel(s);
-            label.setBackground(Color.red);
+            label.setFont(label.getFont().deriveFont(Constants.COLLECTION_FONT_SIZE));
             panel.add(label);
         }
 

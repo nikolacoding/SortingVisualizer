@@ -3,11 +3,13 @@ package sorting;
 import display.MainWindow;
 import general.Utility;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
 
-public final class SortingAlgorithms {
-    public static void BubbleSort(JPanel numbersPanel, boolean ascending) {
+public class SortingAlgorithms {
+
+    protected static void BubbleSort(JPanel numbersPanel, boolean ascending) {
         int size = numbersPanel.getComponentCount();
         int compareAgainst = ascending ? 1 : -1;
 
@@ -42,7 +44,7 @@ public final class SortingAlgorithms {
         }).start();
     }
 
-    public static void SelectionSort(JPanel numbersPanel, boolean ascending){
+    protected static void SelectionSort(JPanel numbersPanel, boolean ascending){
         int size = numbersPanel.getComponentCount();
         int compareAgainst = ascending ? 1 : -1;
 
@@ -86,6 +88,9 @@ public final class SortingAlgorithms {
                     // at the end of each iteration swap the smallest/greatest found element with the anchor accordingly
                     final int max_i_f = max_i;
                     SwingUtilities.invokeLater(() -> SortingUtilities.SwapTwo(numbersPanel, i_f, max_i_f));
+
+                    // un-label the swapped element
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, max_i_f, Color.black));
                 }
                 // also label the newly moved element green to signify it now being in the sorted portion of the collection
                 // (this is outside of the loop and condition above because a swap doesn't strictly need to happen)
@@ -102,6 +107,117 @@ public final class SortingAlgorithms {
             }
 
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
+        }).start();
+    }
+
+    protected static void InsertionSort(JPanel numbersPanel, boolean ascending) {
+        int size = numbersPanel.getComponentCount();
+        int compareAgainst = ascending ? -1 : 1;
+
+        new Thread(() -> {
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+
+            // outer loop, makes sure the inner loop, if invoked, runs from i backwards
+            for (int i = 1; i < size; i++) {
+                final int i_f = i;
+                final long sleepDuration = MainWindow.GetInverseSimulationSpeed();
+                int j = i;
+
+                SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f, Color.blue));
+                Utility.Sleep(sleepDuration);
+
+                // inner loop, makes sure to keep swapping elements until the logic of INSERTING the out-of-place i-th element
+                // into its appropriate place in the sorted (left) portion of the collection is correctly simulated
+                while (j >= 1 && SortingUtilities.CompareTwo(numbersPanel, j, j - 1) == compareAgainst) {
+                    final int j_f = j;
+
+                    // label the about-to-be-swapped 'critical' element
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.red));
+
+                    // pause
+                    Utility.Sleep(sleepDuration);
+
+                    // label the element about to be swapped with the critical one
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - 1, Color.blue));
+
+                    // swap them
+                    SortingUtilities.SwapTwo(numbersPanel, j, j - 1);
+
+                    // pause
+                    Utility.Sleep(sleepDuration);
+
+                    // re-label the critical element to signify that it's being checked again
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - 1, Color.blue));
+
+                    // un-label the swapped element
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.black));
+
+                    j--;
+                }
+                final int j_f = j;
+                SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.black));
+            }
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
+        }).start();
+    }
+
+    protected static void ShellSort(JPanel numbersPanel, boolean ascending) {
+        int size = numbersPanel.getComponentCount();
+        int compareAgainst = ascending ? -1 : 1;
+
+        new Thread(() -> {
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+
+            // outer outer loop, tracks the increment
+            for (int h = size / 2; h > 0; h /= 2) {
+                final int h_f = h;
+                // outer loop, makes sure the inner loop, if invoked, runs from i backwards
+                for (int i = 1; i < size; i++) {
+                    final int i_f = i;
+                    final long sleepDuration = MainWindow.GetInverseSimulationSpeed();
+                    int j = i;
+
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f, Color.blue));
+                    if (i_f - h_f >= 0)
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f - h_f, Color.blue));
+                    Utility.Sleep(sleepDuration);
+
+                    // inner loop, makes sure to keep swapping elements until the logic of INSERTING the out-of-place i-th element
+                    // into its appropriate place in the sorted (left) portion of the collection is correctly simulated
+                    while (j >= h && SortingUtilities.CompareTwo(numbersPanel, j, j - h) == compareAgainst) {
+                        final int j_f = j;
+
+                        // label the about-to-be-swapped 'critical' element
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.red));
+
+                        // pause
+                        Utility.Sleep(sleepDuration);
+
+                        // label the element about to be swapped with the critical one
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - h_f, Color.blue));
+
+                        // swap them
+                        SortingUtilities.SwapTwo(numbersPanel, j, j - h);
+
+                        // pause
+                        Utility.Sleep(sleepDuration);
+
+                        // re-label the critical element to signify that it's being checked again
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f - h_f, Color.blue));
+
+                        // un-label the swapped element
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.black));
+
+                        j -= h;
+                    }
+                    final int j_f = j;
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, j_f, Color.black));
+                    if (i_f - h_f >= 0)
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f - h_f, Color.black));
+                }
+            }
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
+
         }).start();
     }
 }

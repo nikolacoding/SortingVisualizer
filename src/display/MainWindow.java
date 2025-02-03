@@ -5,7 +5,9 @@ import sorting.SortingPanel;
 import general.*;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,7 +40,7 @@ public class MainWindow extends JFrame {
     }
 
     public static long GetInverseSimulationSpeed(){
-        return 1001 - 10 * (long)speedSlider.getValue();
+        return Constants.BASE_SIMULATION_SPEED - 10 * (long)speedSlider.getValue();
     }
 
     private boolean anyTextFieldIsEmpty(){
@@ -56,8 +58,12 @@ public class MainWindow extends JFrame {
         var newPanel = SortingPanel.generate(numberInputFields);
         numbersPanel.setLayout(newPanel.getLayout());
         numbersPanel.setBackground(newPanel.getBackground());
-        for (var component : newPanel.getComponents())
+
+        for (var component : newPanel.getComponents()) {
+            var label = new JLabel();
+            label.setFont(component.getFont());
             numbersPanel.add(component);
+        }
 
         repaint();
         revalidate();
@@ -72,8 +78,11 @@ public class MainWindow extends JFrame {
         var newPanel = SortingPanel.generate(randomNumbers);
         numbersPanel.setLayout(newPanel.getLayout());
         numbersPanel.setBackground(newPanel.getBackground());
-        for (var component : newPanel.getComponents())
+        for (var component : newPanel.getComponents()) {
+            var label = new JLabel();
+            label.setFont(component.getFont());
             numbersPanel.add(component);
+        }
 
         for (var field : numberInputFields)
             field.setText("");

@@ -45,19 +45,17 @@ public class MainWindow extends JFrame {
         return Constants.BASE_SIMULATION_SPEED - 10 * (long)speedSlider.getValue();
     }
 
-    private boolean anyTextFieldIsEmpty(){
-        for (var field : numberInputFields)
-            if (field.getText().isEmpty())
-                return true;
-        return false;
-    }
-
     private void setNumbers(){
-        //if (anyTextFieldIsEmpty())
-        //    return;
-
         numbersPanel.removeAll();
-        var newPanel = SortingPanel.setGenerate(numberInputField);
+        SortingPanel newPanel;
+
+        try {
+            newPanel = SortingPanel.setGenerate(numberInputField);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
         numbersPanel.setLayout(newPanel.getLayout());
         numbersPanel.setBackground(newPanel.getBackground());
 
@@ -115,12 +113,6 @@ public class MainWindow extends JFrame {
         // top panel management
         topPanel.add(numberInputField);
         topPanel.setPreferredSize(new Dimension(0, 40));
-        //for (int i = 0; i < numberInputFields.length; i++){
-        //    var newTextField = new JTextField();
-        //    newTextField.setPreferredSize(new Dimension(20, 20));
-        //    numberInputFields[i] = newTextField;
-        //    topPanel.add(newTextField);
-        //}
         topPanel.add(setButton);
         topPanel.add(randomizeButton);
         topPanel.add(sortButton);

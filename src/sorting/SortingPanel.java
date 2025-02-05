@@ -16,7 +16,7 @@ public final class SortingPanel extends JPanel {
         this.setBackground(Color.white);
     }
 
-    public static SortingPanel setGenerate(JTextField field){
+    public static SortingPanel setGenerate(JTextField field) throws IllegalArgumentException {
         String content = field.getText();
         String regex = ",";
 
@@ -25,6 +25,9 @@ public final class SortingPanel extends JPanel {
 
         // splitting a string of format "a,b,c" into an array of strings ["a","b","c"]
         String[] items = content.split(regex);
+
+        if (items.length == 1 && items[0].isEmpty())
+            throw new IllegalArgumentException("'Set' pozvan nad praznim poljem za unos.");
 
         // iterating through them all to check how many empty strings we have;
         // this is *apparently* more efficient than making a new collection on the spot;

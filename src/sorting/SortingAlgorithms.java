@@ -264,4 +264,68 @@ public class SortingAlgorithms {
 
         }).start();
     }
+
+    protected static void ShakerSort(JPanel numbersPanel, boolean ascending) {
+        int size = numbersPanel.getComponentCount();
+        int compareAgainst = ascending ? 1 : -1;
+        long[] sleepDuration = { MainWindow.GetInverseSimulationSpeed() };
+
+        new Thread(() -> {
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+
+            Thread speedThread = new Thread(() -> {
+                while (true) {
+                    sleepDuration[0] = MainWindow.GetInverseSimulationSpeed();
+                    Utility.Sleep(Constants.SPEED_UPDATE_INTERVAL);
+                }
+            });
+            speedThread.start();
+
+            int[] left = {0}, right = {size - 1};
+            boolean swapped;
+
+            do {
+                swapped = false;
+
+                for (int i = left[0]; i < right[0]; i++) {
+                    final int i_f = i;
+                    boolean compResult = SortingUtilities.CompareTwo(numbersPanel, i_f, i_f + 1) == compareAgainst;
+                    if (compResult) {
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, i_f, i_f + 1, false));
+                        Utility.Sleep(sleepDuration[0]);
+                        SwingUtilities.invokeLater(() -> SortingUtilities.SwapTwo(numbersPanel, i_f, i_f + 1));
+                        Utility.Sleep(sleepDuration[0]);
+                        swapped = true;
+                    }
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, i_f, i_f + 1, true));
+                }
+                right[0]--;
+
+                if (!swapped) break;
+                swapped = false;
+
+                for (int i = right[0]; i > left[0]; i--) {
+                    final int i_f = i;
+                    boolean compResult = SortingUtilities.CompareTwo(numbersPanel, i_f - 1, i) == compareAgainst;
+                    if (compResult) {
+                        SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, i_f - 1, i_f, false));
+                        Utility.Sleep(sleepDuration[0]);
+                        SwingUtilities.invokeLater(() -> SortingUtilities.SwapTwo(numbersPanel, i_f - 1, i_f));
+                        Utility.Sleep(sleepDuration[0]);
+                        swapped = true;
+                    }
+                    SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, i_f - 1, i_f, true));
+                }
+                left[0]++;
+
+            } while (swapped);
+
+            Utility.Sleep(sleepDuration[0]);
+
+            for (int i = 0; i < size; i++)
+                SortingUtilities.LabelOne(numbersPanel, i, Color.black);
+
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
+        }).start();
+    }
 }

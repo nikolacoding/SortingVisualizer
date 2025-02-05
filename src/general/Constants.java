@@ -11,7 +11,7 @@ public final class Constants {
     // Menu
     public static final int NUM_ITEMS = 10; // obsolete
     public static final int MAX_NUM_ITEMS = 20;
-    public static final String[] ALGORITHM_NAMES = {"Bubble-sort", "Selection-sort", "Insertion-sort", "Shell-sort"};
+    public static final String[] ALGORITHM_NAMES = {"Bubble-sort", "Selection-sort", "Insertion-sort", "Shell-sort", "Shaker-sort"};
     public static final String UP_ARROW = "↑";
     public static final String DOWN_ARROW = "↓";
     public static final float COLLECTION_FONT_SIZE = 20f;

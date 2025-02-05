@@ -19,6 +19,9 @@ public final class SortingManager extends SortingAlgorithms {
             case "Shell-sort":
                 ShellSort(numbersPanel, ascending);
                 break;
+            case "Shaker-sort":
+                ShakerSort(numbersPanel, ascending);
+                break;
             default:
                 throw new IllegalArgumentException("Nevalidan odabrani algoritam: " + algorithm);
         }

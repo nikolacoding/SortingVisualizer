@@ -22,6 +22,7 @@ public class MainWindow extends JFrame {
     public static final JButton setButton = new JButton("Set");
     public static final JButton randomizeButton = new JButton("Randomize");
     public static final JTextField[] numberInputFields = new JTextField[Constants.NUM_ITEMS];
+    public static final JTextField numberInputField = new JTextField(Constants.NUM_ITEMS * 3);
     private final JPanel numbersPanel = new JPanel();
 
     // bottom panel
@@ -37,8 +38,7 @@ public class MainWindow extends JFrame {
         randomizeButton.setEnabled(!state);
         orderButton.setEnabled(!state);
         algorithmSelector.setEnabled(!state);
-        for (var field : numberInputFields)
-            field.setEnabled(!state);
+        numberInputField.setEnabled(!state);
     }
 
     public static long GetInverseSimulationSpeed(){
@@ -53,11 +53,11 @@ public class MainWindow extends JFrame {
     }
 
     private void setNumbers(){
-        if (anyTextFieldIsEmpty())
-            return;
+        //if (anyTextFieldIsEmpty())
+        //    return;
 
         numbersPanel.removeAll();
-        var newPanel = SortingPanel.generate(numberInputFields);
+        var newPanel = SortingPanel.setGenerate(numberInputField);
         numbersPanel.setLayout(newPanel.getLayout());
         numbersPanel.setBackground(newPanel.getBackground());
 
@@ -72,12 +72,12 @@ public class MainWindow extends JFrame {
     }
 
     private void randomizeNumbers(){
-        String[] randomNumbers = new String[Constants.NUM_ITEMS];
-        for (int i = 0; i < Constants.NUM_ITEMS; i++)
-            randomNumbers[i] = String.valueOf(ThreadLocalRandom.current().nextInt(0, 10));
+        String[] randomNumbers = new String[Constants.MAX_NUM_ITEMS];
+        for (int i = 0; i < Constants.MAX_NUM_ITEMS; i++)
+            randomNumbers[i] = String.valueOf(ThreadLocalRandom.current().nextInt(0, Constants.MAX_NUM_ITEMS * 5 - 1));
         numbersPanel.removeAll();
 
-        var newPanel = SortingPanel.generate(randomNumbers);
+        var newPanel = SortingPanel.randomizeGenerate(randomNumbers);
         numbersPanel.setLayout(newPanel.getLayout());
         numbersPanel.setBackground(newPanel.getBackground());
         for (var component : newPanel.getComponents()) {
@@ -86,8 +86,7 @@ public class MainWindow extends JFrame {
             numbersPanel.add(component);
         }
 
-        for (var field : numberInputFields)
-            field.setText("");
+        numberInputField.setText("");
 
         repaint();
         revalidate();
@@ -98,7 +97,7 @@ public class MainWindow extends JFrame {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        this.setSize(Constants.WINDOW_DIMENSION);
 
         // setting the general layout
         this.setLayout(new BorderLayout());
@@ -114,13 +113,14 @@ public class MainWindow extends JFrame {
         bottomPanel.add(speedSlider);
 
         // top panel management
+        topPanel.add(numberInputField);
         topPanel.setPreferredSize(new Dimension(0, 40));
-        for (int i = 0; i < numberInputFields.length; i++){
-            var newTextField = new JTextField();
-            newTextField.setPreferredSize(new Dimension(20, 20));
-            numberInputFields[i] = newTextField;
-            topPanel.add(newTextField);
-        }
+        //for (int i = 0; i < numberInputFields.length; i++){
+        //    var newTextField = new JTextField();
+        //    newTextField.setPreferredSize(new Dimension(20, 20));
+        //    numberInputFields[i] = newTextField;
+        //    topPanel.add(newTextField);
+        //}
         topPanel.add(setButton);
         topPanel.add(randomizeButton);
         topPanel.add(sortButton);

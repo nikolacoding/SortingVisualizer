@@ -30,7 +30,7 @@ public class SortingAlgorithms {
 
             // outer loop, controls the idea of the sorted part of the collection
             for (int i = 0; i < size - 1; i++) {
-                // inner loop, pure comparisons
+                // inner loop, comparisons
                 for (int j = 0; j < size - i - 1; j++) {
                     final int j_f = j;
 

@@ -30,6 +30,7 @@ public class SortingAlgorithms {
 
             // outer loop, controls the idea of the sorted part of the collection
             for (int i = 0; i < size - 1; i++) {
+                final int i_f = i;
                 // inner loop, comparisons
                 for (int j = 0; j < size - i - 1; j++) {
                     final int j_f = j;
@@ -47,7 +48,15 @@ public class SortingAlgorithms {
                     }
                     SwingUtilities.invokeLater(() -> SortingUtilities.LabelTwo(numbersPanel, j_f, j_f + 1, true));
                 }
+                SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, size - 1 - i_f, Color.green));
             }
+            SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, 0, Color.green));
+
+            Utility.Sleep(sleepDuration[0]);
+
+            for (int i = 0; i < size; i++)
+                SortingUtilities.LabelOne(numbersPanel, i, Color.black);
+
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
         }).start();
     }

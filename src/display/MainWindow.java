@@ -130,10 +130,15 @@ public class MainWindow extends JFrame {
                     setNumbers();
                 else if (e.getSource() == randomizeButton)
                     randomizeNumbers();
-                else if (e.getSource() == sortButton)
-                    SortingManager.SortingDelegator(String.valueOf(algorithmSelector.getSelectedItem()),
-                            numbersPanel,
-                            orderButton.getText().equals(Constants.UP_ARROW));
+                else if (e.getSource() == sortButton) {
+                    try {
+                        SortingManager.SortingDelegator(String.valueOf(algorithmSelector.getSelectedItem()),
+                                numbersPanel,
+                                orderButton.getText().equals(Constants.UP_ARROW));
+                    } catch (RuntimeException exception){
+                        System.out.println(exception.getMessage());
+                    }
+                }
             }
         };
 

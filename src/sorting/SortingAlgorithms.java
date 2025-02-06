@@ -54,8 +54,7 @@ public class SortingAlgorithms {
 
             Utility.Sleep(sleepDuration[0]);
 
-            for (int i = 0; i < size; i++)
-                SortingUtilities.LabelOne(numbersPanel, i, Color.black);
+            SortingUtilities.LabelAll(numbersPanel, Color.black);
 
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
         }).start();
@@ -127,10 +126,7 @@ public class SortingAlgorithms {
 
             // revert colors of all labels to black
             Utility.Sleep(MainWindow.GetInverseSimulationSpeed());
-            for (int i = 0; i < numbersPanel.getComponentCount(); i++) {
-                final int i_f = i;
-                SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, i_f, Color.black));
-            }
+            SortingUtilities.LabelAll(numbersPanel, Color.black);
 
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
         }).start();
@@ -327,5 +323,62 @@ public class SortingAlgorithms {
 
             SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
         }).start();
+    }
+
+    protected static void QuickSort(JPanel numbersPanel, boolean ascending){
+        Thread driver = new Thread(() -> {
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(true));
+            QuickSortDelegator(numbersPanel, ascending, 0,numbersPanel.getComponentCount() - 1, Constants.INITIAL_QUICKSORT_PIVOT_COLOR);
+            SwingUtilities.invokeLater(() -> MainWindow.SetControlsLock(false));
+            SortingUtilities.LabelAll(numbersPanel, Color.black);
+        });
+
+        driver.start();
+    }
+
+    private static void QuickSortDelegator(JPanel numbersPanel, boolean ascending, int start, int end, Color pivotColor){
+        // recursive delegator
+        long sleepDuration = MainWindow.GetInverseSimulationSpeed();
+
+        if (end <= start)
+            return;
+
+        int pivot = QuickSortPartition(numbersPanel, start, end, ascending);
+        SwingUtilities.invokeLater(() -> SortingUtilities.LabelOne(numbersPanel, pivot, pivotColor));
+        Utility.Sleep(sleepDuration);
+
+        Color newPivotColor = new Color(pivotColor.getRed(), (pivotColor.getGreen() + 25) % 255, (pivotColor.getBlue() + 25) % 255);
+        QuickSortDelegator(numbersPanel, ascending, start, pivot - 1, newPivotColor);
+        QuickSortDelegator(numbersPanel, ascending, pivot + 1, end, newPivotColor);
+    }
+
+    private static int QuickSortPartition(JPanel numbersPanel, int start, int end, boolean ascending){
+        // actual sorting
+        int pivot_index = end;
+        int L = start, R = end;
+        int compareAgainst = ascending ? 1 : -1;
+
+        while (L <= R){
+            for (; L < end; L++) {
+                int comparisonResult = SortingUtilities.CompareTwo(numbersPanel, L, pivot_index);
+                if (comparisonResult == compareAgainst)
+                    break;
+            }
+
+            for (; R >= 0; R--) {
+                int comparisonResult = SortingUtilities.CompareTwo(numbersPanel, R, pivot_index);
+                if (comparisonResult == -compareAgainst)
+                    break;
+            }
+
+            if (L <= R){
+                SortingUtilities.SwapTwo(numbersPanel, L, R);
+                L++;
+                R--;
+            }
+        }
+        final int L_f = L;
+        SwingUtilities.invokeLater(() -> SortingUtilities.SwapTwo(numbersPanel, pivot_index, L_f));
+        return L;
     }
 }

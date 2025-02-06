@@ -1,6 +1,7 @@
 package general;
 
 import java.awt.Dimension;
+import java.awt.Color;
 
 public final class Constants {
 
@@ -11,7 +12,7 @@ public final class Constants {
     // Menu
     public static final int NUM_ITEMS = 10; // obsolete
     public static final int MAX_NUM_ITEMS = 20;
-    public static final String[] ALGORITHM_NAMES = {"Bubble-sort", "Selection-sort", "Insertion-sort", "Shell-sort", "Shaker-sort"};
+    public static final String[] ALGORITHM_NAMES = {"Bubble-sort", "Selection-sort", "Insertion-sort", "Shell-sort", "Shaker-sort", "Quick-sort"};
     public static final String UP_ARROW = "↑";
     public static final String DOWN_ARROW = "↓";
     public static final float COLLECTION_FONT_SIZE = 20f;
@@ -21,4 +22,5 @@ public final class Constants {
     // General
     public static final long BASE_SIMULATION_SPEED = 1001;
     public static final long SPEED_UPDATE_INTERVAL = 50;
+    public static final Color INITIAL_QUICKSORT_PIVOT_COLOR = new Color(255, 42, 0);
 }

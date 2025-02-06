@@ -64,6 +64,15 @@ public final class SortingUtilities {
         numbersPanel.repaint();
     }
 
+    public static void LabelOne(JPanel numbersPanel, int index, Color color){
+        JLabel label = GetLabelByIndex(numbersPanel, index);
+
+        label.setForeground(color);
+
+        numbersPanel.repaint();
+        numbersPanel.revalidate();
+    }
+
     public static void LabelTwo(JPanel numbersPanel, int first, int second, boolean reverse){
         JLabel label1 = GetLabelByIndex(numbersPanel, first);
         JLabel label2 = GetLabelByIndex(numbersPanel, second);
@@ -80,12 +89,36 @@ public final class SortingUtilities {
         numbersPanel.revalidate();
     }
 
-    public static void LabelOne(JPanel numbersPanel, int index, Color color){
-        JLabel label = GetLabelByIndex(numbersPanel, index);
+    public static void LabelAll(JPanel numbersPanel, Color color){
+        for (var component : numbersPanel.getComponents()){
+            JLabel label = (JLabel)component;
+            label.setForeground(color);
+        }
+    }
 
-        label.setForeground(color);
+    public static boolean IsAlreadySorted(JPanel numbersPanel, boolean ascending){
+        Component[] components = numbersPanel.getComponents();
+        int[] componentValues = new int[components.length];
 
-        numbersPanel.repaint();
-        numbersPanel.revalidate();
+        for (int i = 0; i < components.length; i++)
+         componentValues[i] = SortingUtilities.GetLabelValueByIndex(numbersPanel, i);
+
+        boolean areAscending = true, areDescending = true;
+
+        for (int i = 0; i < components.length - 1; i++){
+            if (componentValues[i] < componentValues[i + 1]) {
+                areDescending = false;
+                break;
+            }
+        }
+
+        for (int i = 0; i < components.length - 1; i++){
+            if (componentValues[i] > componentValues[i + 1]) {
+                areAscending = false;
+                break;
+            }
+        }
+
+        return ((areAscending && ascending) || (areDescending && !ascending));
     }
 }

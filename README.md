@@ -50,4 +50,4 @@ While the simulation is ongoing, all controls will be locked except exiting and 
 
 In our concrete example using *selection-sort*, the sorted portion of the collection will be labelled in green. The element that's currently being iterated and having values compared against to find the smallest smaller or greatest greater value will be labelled in blue, and the current smallest/biggest value from the rest of the collection will be marked in red, and subsequently swapped with it if no other smaller/greater values are found in that iteration.
 
-Every sorting algorithm will have its own way of being labeled to allow for clear visualization of how it works.
+Every sorting algorithm uses its own labelling convention to make visualization as easy to grasp and intuitive as possible.
